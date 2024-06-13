@@ -4,6 +4,6 @@
     box-sizing: border-box;
 }
 
-h1 {
-    color: red;
+body {
+    height: 100vh;
 }
