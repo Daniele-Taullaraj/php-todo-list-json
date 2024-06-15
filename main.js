@@ -6,6 +6,11 @@ createApp({
             coseDaFare: [],
             inputUser: "",
             contatore: 0,
+            postRequestConfig: {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }
         }
     },
     methods: {
@@ -24,13 +29,6 @@ createApp({
                 }
             });
         },
-        addElement() {
-            if (!this.inputUser == "") {
-                this.coseDaFare.push({ "titolo": this.inputUser, "done": true });
-                this.inputUser = "";
-                this.contatore++;
-            }
-        },
         changeStatus(listElement) {
             if (listElement.done) {
                 listElement.done = false
@@ -39,12 +37,35 @@ createApp({
                 listElement.done = true
                 this.contatore++;
             }
+        },
+        // addElement() {
+        // if (!this.inputUser == "") {
+        //     this.coseDaFare.push({ "titolo": this.inputUser, "done": true });
+        //     this.inputUser = "";
+        //     this.contatore++;
+        // }
+        // },
+
+        addElement() {
+            if (this.inputUser != "") {
+
+                const newElement = {
+                    titolo: this.inputUser,
+                    done: true
+                };
+
+                axios.post("create.php", newElement, this.postRequestConfig)
+
+                this.coseDaFare.push({ "titolo": this.inputUser, "done": true });
+                this.inputUser = "";
+                this.contatore++;
+            }
         }
 
 
     },
     mounted() {
-        axios.get("api.php").then(results => {
+        axios.get("list.php").then(results => {
             this.coseDaFare = results.data;
             this.countTodo()
         });
